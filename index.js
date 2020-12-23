@@ -2,16 +2,15 @@ const express = require('express')
 const path = require('path')
 const app = express()
 const port = 3010
-const home = require("./router/home")
-
-app.use("/home",home)
-
-app.get('/', (req, res) => res.send('Hello World!'))
-app.post('/', function (req, res) {
-    res.send('Got a POST request')
-  })
-app.get('/users/:userId/books/:bookId', function (req, res) {
-    res.send(req.params)
-})
-app.use('/static', express.static(path.join(__dirname, 'public')))
+const router = require("./router/index")
+const bodyParser = require('body-parser')
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+// parse application/json
+app.use(bodyParser.json())
+//路由管理
+router(app);
+//处理静态资源
+app.use('/static', express.static(path.join(__dirname, 'static')))
+// 端口监听
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
